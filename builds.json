@@ -1,0 +1,16 @@
+{
+    "aloy": {
+        "element": "cryo",
+        "team": "Ayaka/Kokomi/Kazuha",
+        "role": "Burst Support",
+        "weapon_type": "bow",
+        "BIS": "Thundering Pulse",
+        "f2p_option": "Prototype Crescent",
+        "talent_priority": "Burst > Skill",
+        "artifact_set": "Blizard Strayer",
+        "sands": "ATK%",
+        "goblet": "Cryo DMG",
+        "circlet": "Crit DMG",
+        "stats": ["Crit Rate / DMG: 45% / 140%", "ATK: 1700", "Energy Recharge: 140-160%"]
+    }
+}
