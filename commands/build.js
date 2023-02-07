@@ -1,6 +1,9 @@
 const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const builds = require('../builds.json');
 
+const WIKIURL = 'https://genshin-impact.fandom.com/wiki/'
+const replaceSpace = (string) => {return string.replaceAll(' ', '_')};
+
 const elementColorMap = {
     anemo: '#74c2a8',
     cryo: '#9fd6e3',
@@ -8,8 +11,8 @@ const elementColorMap = {
     electro: '#af8ec1',
     geo: '#fab632',
     hydro: '#4cc2f1',
-    pryo: '#ef7938',
-}
+    pyro: '#ef7938',
+};
 
 const characterToImage = {
     albedo: 'https://i.imgur.com/zghLPyG.png',
@@ -86,6 +89,22 @@ const weaponToEmoji = {
     claymore: '<:claymore:1072315527550214224>',
     polearm: '<:polearm:1072315524131860551>',
     sword: '<:sword:1072315318287990865>',
+};
+
+const characterTitle = {
+    itto: 'Arataki Itto'
+}
+
+const characterAliases = {
+    'arataki itto': 'itto',
+    'arataki': 'itto',
+};
+
+const getCharacterName = (character) => {
+    if (characterAliases[character]) {
+        return characterAliases[character]
+    }
+    return character;
 }
 
 module.exports = {
@@ -99,57 +118,72 @@ module.exports = {
                 .setRequired(true)
         ),
     async execute(interaction) {
-        try {
-            const input_character = await interaction.options.getString('character');
-            const build = builds[input_character]
-
-            if (!build) {
-                throw new Error('Build for this character is not avaliable.')
-            }
-
-            const exampleEmbed = new EmbedBuilder()
-			.setColor(elementColorMap[build.element])
-			.setTitle(input_character.charAt(0).toUpperCase() + input_character.slice(1))
-			.setURL(`https://genshin-impact.fandom.com/wiki/${input_character}`)
-			.setDescription(build.team + ' - ' + build.role)
-			.setThumbnail(characterToImage[input_character])
-            .addFields(
-				{ 
-                    name: `Weapons ${weaponToEmoji[build.weapon_type]}`, 
-                    value: `BIS: ${build.BIS}\n F2P: ${build.f2p_option}`, 
-                },
-                {
-                    name: 'Talent Priority',
-                    value: build.talent_priority,
-                },
-                {
-                    name: 'Artifacts',
-                    value: build.artifact_set
-                },
-                {
-                    name: 'Sands <:sands:1072348747419369512>',
-                    value: build.sands,
-                    inline: true
-                },
-                {
-                    name: 'Goblet <:goblet:1072348752842600619>',
-                    value: build.goblet,
-                    inline: true
-                },
-                {
-                    name: 'Circlet <:circlet:1072348730117849088>',
-                    value: build.circlet,
-                    inline: true
-                },
-                {
-                    name: 'Stat priorites / soft goals',
-                    value: build.stats.map((element, index) => (index + 1) + '. ' + element).join('\n')
-                }
-            )
-		    await interaction.reply({embeds: [exampleEmbed]});
-        } catch (error) {
-            await interaction.reply(error);
+        const input_character = await interaction.options.getString('character').toLowerCase();
+        const character = getCharacterName(input_character);
+        const build = builds[character]
+        if (!build) {
+            throw new Error('Build for this character is not avaliable.')
         }
-    }
 
+        const embed = new EmbedBuilder()
+        .setColor(elementColorMap[build.element])
+        .setTitle(character.charAt(0).toUpperCase() + character.slice(1))
+        .setURL(`${WIKIURL}${character}`)
+        .setDescription(build.team + ' - ' + build.role)
+        .setThumbnail(characterToImage[character])
+        .addFields(
+            {
+                name: 'Talent Priority',
+                value: build.talent_priority,
+                inline: true
+            },
+        );
+
+        if (build.best_con) {
+            embed.addFields({ name: 'Best Constellation', value: build.best_con, inline: true,});
+        }
+        if (characterTitle[character]) {
+            embed.setTitle(characterTitle[character]);
+            embed.setURL(`${WIKIURL}${replaceSpace(characterTitle[character])}`)
+        }
+        if (build.f2p_option) {
+            embed.addFields({ 
+                name: `Weapons ${weaponToEmoji[build.weapon_type]}`, 
+                value: `BIS: [${build.BIS}](${WIKIURL}${replaceSpace(build.BIS)})\n F2P: [${build.f2p_option}](${WIKIURL}${replaceSpace(build.f2p_option)})`
+            });
+        } else {
+            embed.addFields({ 
+                name: `Weapons ${weaponToEmoji[build.weapon_type]}`, 
+                value: `BIS: [${build.BIS}](${WIKIURL}${replaceSpace(build.BIS)})`
+            });
+        }
+        
+        embed.addFields(
+            {
+                name: 'Artifacts <:artifacts:1072389881898217502>',
+                value: `[${build.artifact_set}](${WIKIURL}${replaceSpace(build.artifact_set)})`
+            },
+            {
+                name: 'Sands <:sands:1072348747419369512>',
+                value: build.sands,
+                inline: true
+            },
+            {
+                name: 'Goblet <:goblet:1072348752842600619>',
+                value: build.goblet,
+                inline: true
+            },
+            {
+                name: 'Circlet <:circlet:1072348730117849088>',
+                value: build.circlet,
+                inline: true
+            },
+            {
+                name: 'Stat priorites / soft goals',
+                value: build.stats.map((element, index) => (index + 1) + '. ' + element).join('\n')
+            }
+        );
+        if (build.notes) embed.addFields({ name: 'Notes', value: build.notes.join('\n') });
+        await interaction.reply({embeds: [embed]});
+    }
 }
