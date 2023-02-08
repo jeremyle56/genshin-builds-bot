@@ -39,7 +39,8 @@ client.on('interactionCreate', async (interaction) => {
 });
 
 client.once('ready', (c) => {
-    console.log(`Ready! ${c.user.tag} is online`)
+    console.log(`Ready! ${c.user.tag} is online`);
+    client.user.setActivity('/build')
 });
 
 client.on('shardError', (error) => {
