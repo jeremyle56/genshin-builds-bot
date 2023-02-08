@@ -92,12 +92,29 @@ const weaponToEmoji = {
 };
 
 const characterTitle = {
-    itto: 'Arataki Itto'
-}
+    itto: 'Arataki Itto',
+    hutao: 'Hu Tao',
+    kazuha: 'Kaedehara Kazuha',
+    ayaka: 'Kamisato Ayaka',
+    ayato: 'Kamisato Ayato',
+    sara: 'Kujou Sara',
+    kuki: 'Kuki Shinobu',
+};
 
 const characterAliases = {
     'arataki itto': 'itto',
     'arataki': 'itto',
+    'hu tao': 'hutao',
+    'hu-tao': 'hutao',
+    'kaedehara kazuha': 'kazuha',
+    'kaedehara': 'kazuha',
+    'kamisato ayaka': 'ayaka',
+    'kamisato ayato': 'ayato',
+    'kujou sara': 'sara',
+    'kujou': 'sara',
+    'kuki shinobu': 'kuki',
+    'shinobu': 'kuki',
+    'ning': 'ningguang',
 };
 
 const getCharacterName = (character) => {
@@ -157,12 +174,36 @@ module.exports = {
                 value: `BIS: [${build.BIS}](${WIKIURL}${replaceSpace(build.BIS)})`
             });
         }
-        
-        embed.addFields(
-            {
+        if (build.artifact_set.includes('+')) {
+            let artifact_set = build.artifact_set.split(' + ');
+            artifact_set = artifact_set.map(s => {
+                if (s.includes('[')) {
+                    let list = s.replace('[', '').replace(']', '').split(' / ');
+                    list = list.map(l => {
+                        if (isNaN(parseInt(l[0]))) {
+                            return `[${l}](${WIKIURL}${replaceSpace(l)})`;
+                        }
+                        return l;
+                    });
+                    return `[${list.join(' / ')}]`;
+                }
+                if (isNaN(parseInt(s[0]))) {
+                    return `[${s}](${WIKIURL}${replaceSpace(s)})`;
+                }
+                return s;
+            });
+            embed.addFields({
+                name: 'Artifacts <:artifacts:1072389881898217502>',
+                value: artifact_set.join(' + '),
+            });
+        } else {
+            embed.addFields({
                 name: 'Artifacts <:artifacts:1072389881898217502>',
                 value: `[${build.artifact_set}](${WIKIURL}${replaceSpace(build.artifact_set)})`
-            },
+            });
+        }
+        
+        embed.addFields(
             {
                 name: 'Sands <:sands:1072348747419369512>',
                 value: build.sands,
@@ -184,6 +225,7 @@ module.exports = {
             }
         );
         if (build.notes) embed.addFields({ name: 'Notes', value: build.notes.join('\n') });
+        embed.setFooter({ text: 'Data updated as of patch 3.4', iconURL: 'https://s3.getstickerpack.com/storage/uploads/sticker-pack/nahida-kusanali/sticker_5.png?f838d0700f593d0ab47c80a7e2d46d7a&d=200x200'});
         await interaction.reply({embeds: [embed]});
     }
 }
