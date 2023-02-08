@@ -65,7 +65,7 @@ const characterToImage = {
     thoma: 'https://i.imgur.com/Pyy6d84.png',
     tighnari: 'https://i.imgur.com/oXtTU8Y.png',
     traveler_anemo: 'https://i.imgur.com/lu1ePKH.png',
-    traveler_dendro: 'https://i.imgur.com/numA69g.png',
+    traveler_dendro: 'https://i.imgur.com/IPOVqEv.png',
     traveler_electro: 'https://i.imgur.com/zlADdQO.png',
     traveler_geo: 'https://i.imgur.com/Hv589O3.png',
     venti: 'https://i.imgur.com/OtshgSy.png',
@@ -79,7 +79,7 @@ const characterToImage = {
     yaoyao: 'https://i.imgur.com/0ssHhW6.png',
     yelan: 'https://i.imgur.com/9LTrAGu.png',
     yoimiya: 'https://i.imgur.com/LgSAGeM.png',
-    yunjin: 'https://i.imgur.com/mdBSIwC.png',
+    yunjin: 'https://i.imgur.com/Ygxtw1O.png',
     zhongli: 'https://i.imgur.com/Xk6Hn8d.png',
 };
 
@@ -99,6 +99,15 @@ const characterTitle = {
     ayato: 'Kamisato Ayato',
     sara: 'Kujou Sara',
     kuki: 'Kuki Shinobu',
+    raiden: 'Raiden Shogun',
+    kokomi: 'Sangonomiya Kokomi',
+    heiouz: 'Shikanoin Heiouz',
+    traveler_anemo: 'Traveler',
+    traveler_dendro: 'Traveler',
+    traveler_electro: 'Traveler',
+    traveler_geo: 'Traveler',
+    yae: 'Yae Miko',
+    yunjin: 'Yun Jin',
 };
 
 const characterAliases = {
@@ -115,6 +124,28 @@ const characterAliases = {
     'kuki shinobu': 'kuki',
     'shinobu': 'kuki',
     'ning': 'ningguang',
+    'raiden shogun': 'raiden',
+    'shogun': 'raiden',
+    'sangonomiya kokomi': 'kokomi',
+    'sangonomiya': 'kokomi',
+    'shikanoin heizou': 'heizou',
+    'shikanoin': 'heizou',
+    'childe': 'tartaglia',
+    'traveler anemo': 'traveler_anemo',
+    'anemo traveler': 'traveler_anemo',
+    'amc': 'traveler_anemo',
+    'traveler dendro': 'traveler_dendro',
+    'dendro traveler': 'traveler_dendro',
+    'dmc': 'traveler_dendro',
+    'traveler electro': 'traveler_electro',
+    'electro traveler': 'traveler_electro',
+    'emc': 'traveler_electro',
+    'traveler geo': 'traveler_geo',
+    'geo traveler': 'traveler_geo',
+    'gmc': 'traveler_geo',
+    'yae miko': 'yae',
+    'miko': 'yae',
+    'yun jin': 'yunjin',
 };
 
 const getCharacterName = (character) => {
@@ -139,9 +170,9 @@ module.exports = {
         const character = getCharacterName(input_character);
         const build = builds[character]
         if (!build) {
-            throw new Error('Build for this character is not avaliable.')
+            return await interaction.reply('Build for this character is not avaliable.')
         }
-
+        console.log(characterToImage[character])
         const embed = new EmbedBuilder()
         .setColor(elementColorMap[build.element])
         .setTitle(character.charAt(0).toUpperCase() + character.slice(1))
