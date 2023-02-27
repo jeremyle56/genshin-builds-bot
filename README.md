@@ -58,4 +58,4 @@ If you'd like to suggest a feature or report a reproducible bug, please open an 
 - [Genshin Optimizer](https://github.com/frzyc/genshin-optimizer) - Character avatar icons
 - [Xlice](https://www.youtube.com/@Xlice) - Character build info
 - [Profile picture](https://twitter.com/Daily_Nahida/status/1585493163728404481) and [Footer Icon](https://getstickerpack.com/stickers/nahida-kusanali) - for Nahida chibis
-- All above data was compiled into [Genshin Builds Data](https://docs.google.com/spreadsheets/d/1g7w9QjptDe_OLStWhQYoTANET4tFIebFTAbQmPAVsMA/edit#gid=0) which was then converted to [builds.json)(./builds.json)
+- All above data was compiled into [Genshin Builds Data](https://docs.google.com/spreadsheets/d/1g7w9QjptDe_OLStWhQYoTANET4tFIebFTAbQmPAVsMA/edit#gid=0) which was then converted to [builds.json](./builds.json)
